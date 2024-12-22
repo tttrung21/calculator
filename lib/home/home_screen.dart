@@ -6,14 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   final List<ItemPad> buttons = const [
     ItemPad(name: "C", calculations: Calculations.delete),
     ItemPad(name: "+/-", calculations: Calculations.flip),
@@ -36,9 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ItemPad(name: "DEL", calculations: Calculations.delete),
     ItemPad(name: "=", calculations: Calculations.equal),
   ];
-
-  String? output;
-  String input = '0';
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context, value, child) => Text(value.inputString,
                 maxLines: 1,
                 softWrap: false,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(overflow: TextOverflow.ellipsis))),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(overflow: TextOverflow.ellipsis))),
         const SizedBox(
           height: 12,
         ),
@@ -89,10 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 output,
                 maxLines: 1,
                 softWrap: false,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(overflow: TextOverflow.ellipsis),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(overflow: TextOverflow.ellipsis),
               );
             }),
       ],
@@ -107,10 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
       height: height / 2 + height / 6,
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: (width + width) / height,
-            crossAxisCount: 4,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16),
+            childAspectRatio: (width + width) / height, crossAxisCount: 4, mainAxisSpacing: 16, crossAxisSpacing: 16),
         itemBuilder: (_, index) {
           final item = buttons[index];
           return _buildItem(item, index, context);
@@ -127,21 +110,24 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       padding: EdgeInsets.zero,
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: _getColor(index)),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: _getColor(index, context)),
         alignment: Alignment.center,
         child: item.calculations == Calculations.flip
-            ? Image.asset('assets/Union.png',color: _getTextColor(index))
-            : Text(
-                item.name.toString(),
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.w400,color: _getTextColor(index)),
-              ),
+            ? Image.asset('assets/Union.png', color: _getTextColor(index, context))
+            : item.calculations == Calculations.delete
+                ? Image.asset('assets/delete.png', color: _getTextColor(index, context))
+                : Text(
+                    item.name.toString(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w400, color: _getTextColor(index, context)),
+                  ),
       ),
     );
   }
-  Color? _getTextColor(int index){
+
+  Color? _getTextColor(int index, BuildContext context) {
     switch (index) {
       case 3:
       case 7:
@@ -154,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Color? _getColor(int index) {
+  Color? _getColor(int index, BuildContext context) {
     switch (index) {
       case < 3:
         return Theme.of(context).primaryColor;

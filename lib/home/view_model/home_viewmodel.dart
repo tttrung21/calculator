@@ -1,3 +1,4 @@
+
 import 'package:calculator/enum/calculations.dart';
 import 'package:calculator/model/item_pad_model.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:math_expressions/math_expressions.dart';
 class HomeViewModel with ChangeNotifier {
   bool _hasComma = false;
   String _inputString = '0';
-  String _currentNumber = '';
+  List<String> _listInput = ['0'];
   double? _output;
 
   String get inputString => _inputString;
@@ -34,22 +35,26 @@ class HomeViewModel with ChangeNotifier {
     if(_hasComma == false) {
       _hasComma = true;
       _inputString += '.';
+      _listInput.add('.');
     }
   }
   void _handleNumberInput(String number) {
     if (_inputString == '0') {
       _inputString = number;
-      _currentNumber = number;
     } else {
       _inputString += number;
-      _currentNumber += number;
     }
+    _listInput.add(number);
   }
 
   void _handleCalculation(ItemPad item) {
-    _hasComma = false;
-    _currentNumber = '';
-    _inputString = _inputString + item.name;
+    final lastItem = int.tryParse(_listInput.last);
+    if(lastItem != null || _listInput.last == 'x-1') {
+      _hasComma = false;
+      _inputString = _inputString + item.name;
+      _listInput.add(item.name);
+    }
+
     notifyListeners();
   }
 
@@ -58,9 +63,8 @@ class HomeViewModel with ChangeNotifier {
     // _currentNumber[0] == '-'
     //     ? _currentNumber = _currentNumber.substring(1)
     //     : _currentNumber = '-$_currentNumber';
-    _inputString[0] == '-'
-        ? _inputString = _inputString.substring(1)
-        : _inputString = '-$_inputString';
+    _inputString += 'x-1';
+    _listInput.add('x-1');
   }
 
   void _handleEqual() {
@@ -70,6 +74,8 @@ class HomeViewModel with ChangeNotifier {
     Expression exp = p.parse(input);
     ContextModel ctx = ContextModel();
     _output = exp.evaluate(EvaluationType.REAL, ctx);
+    print(_listInput);
+    print(_inputString);
   }
 
   void _handleDelete(String name) {
@@ -77,11 +83,14 @@ class HomeViewModel with ChangeNotifier {
       case 'DEL':
         if (_inputString.length == 1) {
           _inputString = '0';
+          _listInput = ['0'];
         } else if (_inputString != '0') {
           _inputString = _inputString.substring(0, inputString.length - 1);
+          _listInput.removeLast();
         }
       case 'C':
         _inputString = '0';
+        _listInput = ['0'];
         _output = null;
     }
   }
