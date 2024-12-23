@@ -62,30 +62,28 @@ class HomeViewModel with ChangeNotifier {
 
   void _handleFlip() {
     /// ? zero/one occurrence (means optional) // + one or more // * zero or more // $ end regex
-    final regex = RegExp(r'([+\-*/])?(-?\d+\.?\d*)$');
+    final regex = RegExp(r'([+\-x÷])?(-?\d+\.?\d*)$');
     final match = regex.firstMatch(_inputString);
-    if (match != null) {
-      final operator = match.group(1);
-      final number = match.group(2);
-      if (number != null) {
-        if(_listInput.length == 1){
-          if(operator == null || operator == '+'){
-            _inputString = '-$_inputString';
-          }
-          else{
-            _inputString = _inputString.substring(1);
-          }
-        }
-        else {
-          print(match.start);
-          if (number.startsWith('-')) {
-            _inputString = _inputString.substring(0, match.start + (operator?.length ?? 0)) +
-                number.substring(1);
-          } else {
-            _inputString =
-                '${_inputString.substring(0, match.start + (operator?.length ?? 0))}-$number';
-          }
-        }
+    if (match == null) return;
+    final operator = match.group(1);
+    final number = match.group(2);
+    if (number == null) return;
+
+    if (_listInput.length == 1 && _listInput.first != '0') {
+      if (operator == null || operator == '+') {
+        _inputString = '-$_inputString';
+      } else {
+        _inputString = _inputString.substring(1);
+      }
+      return;
+    }
+    if (_listInput.length > 1) {
+      if (number.startsWith('-')) {
+        _inputString =
+            _inputString.substring(0, match.start + (operator?.length ?? 0)) + number.substring(1);
+      } else {
+        _inputString =
+            '${_inputString.substring(0, match.start + (operator?.length ?? 0))}-$number';
       }
     }
   }

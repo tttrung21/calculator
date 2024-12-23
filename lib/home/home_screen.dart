@@ -31,7 +31,8 @@ class HomeScreen extends StatelessWidget {
     ItemPad(name: "DEL", calculations: Calculations.delete),
     ItemPad(name: "=", calculations: Calculations.equal),
   ];
-  bool _isWidthBigger(double height,double width){
+
+  bool _isWidthBigger(double height, double width) {
     return width > height;
   }
   @override
@@ -48,7 +49,7 @@ class HomeScreen extends StatelessWidget {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(padding.left + 8, 16, padding.right + 8, 32),
+            padding: EdgeInsets.fromLTRB(padding.left + 16, 4, padding.right + 16, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [_buildInputOutput(context), _buildButtons(context)],
@@ -64,29 +65,44 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Consumer<HomeViewModel>(
-            builder: (context, value, child) => Text(value.inputString,
-                maxLines: 1,
-                softWrap: false,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(overflow: TextOverflow.ellipsis))),
-        const SizedBox(
-          height: 12,
-        ),
+        Selector<HomeViewModel, String>(
+            selector: (p0, p1) => p1.inputString,
+            builder: (context, value, child) => Container(
+                  alignment: Alignment.centerRight,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    child: Text(value,
+                        maxLines: 1,
+                        softWrap: false,
+                        textAlign: TextAlign.right,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(overflow: TextOverflow.ellipsis)),
+                  ),
+                )),
+        const SizedBox(height: 4),
         Selector<HomeViewModel, double?>(
             selector: (context, vm) => vm.output,
             builder: (context, value, child) {
               var output = value?.toString() ?? '0';
-              return Text(
-                output,
-                maxLines: 1,
-                softWrap: false,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(overflow: TextOverflow.ellipsis),
+              return Container(
+                alignment: Alignment.centerRight,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  reverse: true,
+                  child: Text(
+                    output,
+                    maxLines: 1,
+                    textAlign: TextAlign.right,
+                    softWrap: false,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(overflow: TextOverflow.ellipsis),
+                  ),
+                ),
               );
             }),
       ],
@@ -97,7 +113,7 @@ class HomeScreen extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     final height = size.height;
     final width = size.width;
-    final ratio = (width+width)/height;
+    final ratio = (width + width) / height;
     return SizedBox(
       height: height / 2 + height / 6,
       child: GridView.builder(
@@ -130,7 +146,7 @@ class HomeScreen extends StatelessWidget {
             : item.calculations == Calculations.delete && item.name == 'DEL'
                 ? Image.asset('assets/delete.png', color: _getTextColor(index, context))
                 : Text(
-                    item.name.toString(),
+                    item.name,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w400, color: _getTextColor(index, context)),
                   ),
