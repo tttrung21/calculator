@@ -31,7 +31,9 @@ class HomeScreen extends StatelessWidget {
     ItemPad(name: "DEL", calculations: Calculations.delete),
     ItemPad(name: "=", calculations: Calculations.equal),
   ];
-
+  bool _isWidthBigger(double height,double width){
+    return width > height;
+  }
   @override
   Widget build(BuildContext context) {
     final padding = MediaQuery.paddingOf(context);
@@ -41,7 +43,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          title: CustomSwitch(),
+          title: const CustomSwitch(),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -66,7 +68,10 @@ class HomeScreen extends StatelessWidget {
             builder: (context, value, child) => Text(value.inputString,
                 maxLines: 1,
                 softWrap: false,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(overflow: TextOverflow.ellipsis))),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(overflow: TextOverflow.ellipsis))),
         const SizedBox(
           height: 12,
         ),
@@ -78,7 +83,10 @@ class HomeScreen extends StatelessWidget {
                 output,
                 maxLines: 1,
                 softWrap: false,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(overflow: TextOverflow.ellipsis),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(overflow: TextOverflow.ellipsis),
               );
             }),
       ],
@@ -89,11 +97,15 @@ class HomeScreen extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     final height = size.height;
     final width = size.width;
+    final ratio = (width+width)/height;
     return SizedBox(
       height: height / 2 + height / 6,
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: (width + width) / height, crossAxisCount: 4, mainAxisSpacing: 16, crossAxisSpacing: 16),
+            childAspectRatio: _isWidthBigger(height, width) ? 3 : ratio,
+            crossAxisCount: 4,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16),
         itemBuilder: (_, index) {
           final item = buttons[index];
           return _buildItem(item, index, context);
@@ -110,18 +122,17 @@ class HomeScreen extends StatelessWidget {
       },
       padding: EdgeInsets.zero,
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: _getColor(index, context)),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24), color: _getColor(index, context)),
         alignment: Alignment.center,
         child: item.calculations == Calculations.flip
             ? Image.asset('assets/Union.png', color: _getTextColor(index, context))
-            : item.calculations == Calculations.delete
+            : item.calculations == Calculations.delete && item.name == 'DEL'
                 ? Image.asset('assets/delete.png', color: _getTextColor(index, context))
                 : Text(
                     item.name.toString(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.w400, color: _getTextColor(index, context)),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w400, color: _getTextColor(index, context)),
                   ),
       ),
     );

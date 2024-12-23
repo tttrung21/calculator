@@ -1,4 +1,3 @@
-
 import 'package:calculator/enum/calculations.dart';
 import 'package:calculator/model/item_pad_model.dart';
 import 'package:flutter/material.dart';
@@ -31,13 +30,15 @@ class HomeViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
-  void _handleComma(){
-    if(_hasComma == false) {
+
+  void _handleComma() {
+    if (_hasComma == false) {
       _hasComma = true;
       _inputString += '.';
       _listInput.add('.');
     }
   }
+
   void _handleNumberInput(String number) {
     if (_inputString == '0') {
       _inputString = number;
@@ -49,7 +50,7 @@ class HomeViewModel with ChangeNotifier {
 
   void _handleCalculation(ItemPad item) {
     final lastItem = int.tryParse(_listInput.last);
-    if(lastItem != null || _listInput.last == 'x-1') {
+    if (lastItem != null || _listInput.last == 'x-1') {
       _hasComma = false;
       _inputString = _inputString + item.name;
       _listInput.add(item.name);
@@ -59,11 +60,16 @@ class HomeViewModel with ChangeNotifier {
   }
 
   void _handleFlip() {
-    // print(_currentNumber);
-    // _currentNumber[0] == '-'
-    //     ? _currentNumber = _currentNumber.substring(1)
-    //     : _currentNumber = '-$_currentNumber';
-    _inputString += 'x-1';
+    /// ? zero/one occurrence (means optional) // + one or more // * zero or more // $ end regex
+    final regex = RegExp(r'(-?\d+\.?\d*)$');
+    final match = regex.firstMatch(_inputString);
+    if(match != null){
+      final lastNumber = match.group(0);
+      if(lastNumber != null) {
+        final toggle = double.parse(lastNumber) * -1;
+        _inputString = _inputString.substring(0,match.start) + toggle.toString();
+      }
+    }
     _listInput.add('x-1');
   }
 
@@ -74,8 +80,6 @@ class HomeViewModel with ChangeNotifier {
     Expression exp = p.parse(input);
     ContextModel ctx = ContextModel();
     _output = exp.evaluate(EvaluationType.REAL, ctx);
-    print(_listInput);
-    print(_inputString);
   }
 
   void _handleDelete(String name) {
