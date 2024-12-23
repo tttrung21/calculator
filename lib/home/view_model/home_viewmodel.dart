@@ -42,6 +42,7 @@ class HomeViewModel with ChangeNotifier {
   void _handleNumberInput(String number) {
     if (_inputString == '0') {
       _inputString = number;
+      _listInput.removeAt(0);
     } else {
       _inputString += number;
     }
@@ -61,25 +62,43 @@ class HomeViewModel with ChangeNotifier {
 
   void _handleFlip() {
     /// ? zero/one occurrence (means optional) // + one or more // * zero or more // $ end regex
-    final regex = RegExp(r'(-?\d+\.?\d*)$');
+    final regex = RegExp(r'([+\-*/])?(-?\d+\.?\d*)$');
     final match = regex.firstMatch(_inputString);
-    if(match != null){
-      final lastNumber = match.group(0);
-      if(lastNumber != null) {
-        final toggle = double.parse(lastNumber) * -1;
-        _inputString = _inputString.substring(0,match.start) + toggle.toString();
+    if (match != null) {
+      final operator = match.group(1);
+      final number = match.group(2);
+      if (number != null) {
+        if(_listInput.length == 1){
+          if(operator == null || operator == '+'){
+            _inputString = '-$_inputString';
+          }
+          else{
+            _inputString = _inputString.substring(1);
+          }
+        }
+        else {
+          print(match.start);
+          if (number.startsWith('-')) {
+            _inputString = _inputString.substring(0, match.start + (operator?.length ?? 0)) +
+                number.substring(1);
+          } else {
+            _inputString =
+                '${_inputString.substring(0, match.start + (operator?.length ?? 0))}-$number';
+          }
+        }
       }
     }
-    _listInput.add('x-1');
   }
 
   void _handleEqual() {
     String input = _inputString;
     input = input.replaceAll('x', '*').replaceAll('÷', '/');
-    Parser p = Parser();
-    Expression exp = p.parse(input);
-    ContextModel ctx = ContextModel();
-    _output = exp.evaluate(EvaluationType.REAL, ctx);
+    if (double.tryParse(_listInput.last) != null) {
+      Parser p = Parser();
+      Expression exp = p.parse(input);
+      ContextModel ctx = ContextModel();
+      _output = exp.evaluate(EvaluationType.REAL, ctx);
+    }
   }
 
   void _handleDelete(String name) {
