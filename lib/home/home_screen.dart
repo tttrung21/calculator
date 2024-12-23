@@ -35,6 +35,7 @@ class HomeScreen extends StatelessWidget {
   bool _isWidthBigger(double height, double width) {
     return width > height;
   }
+
   @override
   Widget build(BuildContext context) {
     final padding = MediaQuery.paddingOf(context);
@@ -52,7 +53,11 @@ class HomeScreen extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(padding.left + 16, 4, padding.right + 16, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: [_buildInputOutput(context), _buildButtons(context)],
+              children: [
+                _buildInputOutput(context),
+                const SizedBox(height: 8),
+                _buildButtons(context)
+              ],
             ),
           ),
         ),
@@ -66,22 +71,24 @@ class HomeScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Selector<HomeViewModel, String>(
-            selector: (p0, p1) => p1.inputString,
-            builder: (context, value, child) => Container(
-                  alignment: Alignment.centerRight,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    reverse: true,
-                    child: Text(value,
-                        maxLines: 1,
-                        softWrap: false,
-                        textAlign: TextAlign.right,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(overflow: TextOverflow.ellipsis)),
-                  ),
-                )),
+            selector: (context, vm) => vm.inputString,
+            builder: (context, value, child) {
+              return Container(
+                alignment: Alignment.centerRight,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  reverse: true,
+                  child: Text(value,
+                      maxLines: 1,
+                      softWrap: false,
+                      textAlign: TextAlign.right,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(overflow: TextOverflow.ellipsis, height: 0)),
+                ),
+              );
+            }),
         const SizedBox(height: 4),
         Selector<HomeViewModel, double?>(
             selector: (context, vm) => vm.output,

@@ -8,9 +8,10 @@ class AppThemes {
     ),
     primaryColorDark: Colors.white,
     primaryColorLight: Colors.black,
-    textTheme:  TextTheme(
-      bodyLarge: const TextStyle(color: Colors.white, fontSize: 72, fontWeight: FontWeight.w300),
-      bodyMedium: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 32, fontWeight: FontWeight.w300),
+    textTheme: TextTheme(
+      bodyLarge: const TextStyle(color: Colors.white, fontSize: 96, fontWeight: FontWeight.w300),
+      bodyMedium: TextStyle(
+          color: Colors.white.withOpacity(0.4), fontSize: 40, fontWeight: FontWeight.w300),
     ),
     buttonTheme: const ButtonThemeData(
       buttonColor: Color(0xFF4E505F),
@@ -22,15 +23,17 @@ class AppThemes {
 
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: const Color(0xFFF1F2F3),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFF1F2F3)
-    ),
+    appBarTheme: const AppBarTheme(backgroundColor: Color(0xFFF1F2F3)),
     primaryColorDark: Colors.black,
     primaryColorLight: Colors.white,
-    textTheme:  TextTheme(
-      bodyLarge: const TextStyle(color: Colors.black, fontSize: 72, fontWeight: FontWeight.w300),
-      bodyMedium: TextStyle(color: Colors.black.withOpacity(0.4), fontSize: 32, fontWeight: FontWeight.w300),
-    ),
+    textTheme: TextTheme(
+        bodyLarge: const TextStyle(
+            color: Colors.black, fontSize: 72, fontWeight: FontWeight.w300, height: 0),
+        bodyMedium: TextStyle(
+            color: Colors.black.withOpacity(0.4),
+            fontSize: 32,
+            fontWeight: FontWeight.w300,
+            height: 0)),
     buttonTheme: const ButtonThemeData(
       buttonColor: Color(0xFFD2D3DA),
     ),
