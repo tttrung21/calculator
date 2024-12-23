@@ -8,7 +8,12 @@ import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
+  // Num pad
+  // ['C', '+/-', '%' , '/']
+  // ['7',  '8' , '9' , 'x']
+  // ['4',  '5' , '6' , '-']
+  // ['1',  '2' , '3' , '+']
+  // ['.',  '0' ,'DEL', '=']
   final List<ItemPad> buttons = const [
     ItemPad(name: "C", calculations: Calculations.delete),
     ItemPad(name: "+/-", calculations: Calculations.flip),
@@ -52,11 +57,11 @@ class HomeScreen extends StatelessWidget {
           child: SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(padding.left + 16, 4, padding.right + 16, 0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                const SizedBox(height: 16),
                 _buildInputOutput(context),
-                const SizedBox(height: 8),
-                _buildButtons(context)
+                _buildButtons(context),
               ],
             ),
           ),
@@ -67,7 +72,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildInputOutput(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      // crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Selector<HomeViewModel, String>(
@@ -85,11 +90,10 @@ class HomeScreen extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(overflow: TextOverflow.ellipsis, height: 0)),
+                          ?.copyWith(overflow: TextOverflow.ellipsis)),
                 ),
               );
             }),
-        const SizedBox(height: 4),
         Selector<HomeViewModel, double?>(
             selector: (context, vm) => vm.output,
             builder: (context, value, child) {
@@ -122,7 +126,7 @@ class HomeScreen extends StatelessWidget {
     final width = size.width;
     final ratio = (width + width) / height;
     return SizedBox(
-      height: height / 2 + height / 6,
+      height: height / 2 + height / 8,
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             childAspectRatio: _isWidthBigger(height, width) ? 3 : ratio,

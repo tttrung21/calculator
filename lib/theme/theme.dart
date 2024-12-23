@@ -9,9 +9,13 @@ class AppThemes {
     primaryColorDark: Colors.white,
     primaryColorLight: Colors.black,
     textTheme: TextTheme(
-      bodyLarge: const TextStyle(color: Colors.white, fontSize: 96, fontWeight: FontWeight.w300),
+      bodyLarge: const TextStyle(
+          color: Colors.white, fontSize: 96, fontWeight: FontWeight.w300, height: 0),
       bodyMedium: TextStyle(
-          color: Colors.white.withOpacity(0.4), fontSize: 40, fontWeight: FontWeight.w300),
+          color: Colors.white.withValues(alpha: 0.4),
+          fontSize: 40,
+          fontWeight: FontWeight.w300,
+          height: 0),
     ),
     buttonTheme: const ButtonThemeData(
       buttonColor: Color(0xFF4E505F),
@@ -28,10 +32,10 @@ class AppThemes {
     primaryColorLight: Colors.white,
     textTheme: TextTheme(
         bodyLarge: const TextStyle(
-            color: Colors.black, fontSize: 72, fontWeight: FontWeight.w300, height: 0),
+            color: Colors.black, fontSize: 96, fontWeight: FontWeight.w300, height: 0),
         bodyMedium: TextStyle(
-            color: Colors.black.withOpacity(0.4),
-            fontSize: 32,
+            color: Colors.black.withValues(alpha: 0.4),
+            fontSize: 40,
             fontWeight: FontWeight.w300,
             height: 0)),
     buttonTheme: const ButtonThemeData(
