@@ -8,7 +8,7 @@ class HomeViewModel with ChangeNotifier {
   String _inputString = '0';
   List<String> _listInput = ['0'];
   double? _output;
-
+  String? errorMsg;
   String get inputString => _inputString;
 
   double? get output => _output;
@@ -51,13 +51,11 @@ class HomeViewModel with ChangeNotifier {
 
   void _handleCalculation(ItemPad item) {
     final lastItem = int.tryParse(_listInput.last);
-    if (lastItem != null || _listInput.last == 'x-1') {
+    if (lastItem != null) {
       _hasComma = false;
       _inputString = _inputString + item.name;
       _listInput.add(item.name);
     }
-
-    notifyListeners();
   }
 
   void _handleFlip() {
@@ -68,7 +66,7 @@ class HomeViewModel with ChangeNotifier {
     final operator = match.group(1);
     final number = match.group(2);
     if (number == null) return;
-
+    print('${match.start} : ${match.end}');
     if (_listInput.length == 1 && _listInput.first != '0') {
       if (operator == null || operator == '+') {
         _inputString = '-$_inputString';
@@ -92,10 +90,15 @@ class HomeViewModel with ChangeNotifier {
     String input = _inputString;
     input = input.replaceAll('x', '*').replaceAll('÷', '/');
     if (double.tryParse(_listInput.last) != null) {
-      Parser p = Parser();
-      Expression exp = p.parse(input);
-      ContextModel ctx = ContextModel();
-      _output = exp.evaluate(EvaluationType.REAL, ctx);
+      try{
+        Parser p = Parser();
+        Expression exp = p.parse(input);
+        ContextModel ctx = ContextModel();
+        _output = exp.evaluate(EvaluationType.REAL, ctx);
+      }
+      catch(e){
+        errorMsg = e.toString();
+      }
     }
   }
 
@@ -105,14 +108,20 @@ class HomeViewModel with ChangeNotifier {
         if (_inputString.length == 1) {
           _inputString = '0';
           _listInput = ['0'];
+          _hasComma = false;
         } else if (_inputString != '0') {
           _inputString = _inputString.substring(0, inputString.length - 1);
+          if(_listInput.last == '.'){
+            _hasComma = false;
+          }
           _listInput.removeLast();
         }
       case 'C':
         _inputString = '0';
         _listInput = ['0'];
+        _hasComma = false;
         _output = null;
     }
+    errorMsg = null;
   }
 }

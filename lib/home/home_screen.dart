@@ -2,12 +2,14 @@ import 'package:calculator/enum/calculations.dart';
 import 'package:calculator/home/view_model/home_viewmodel.dart';
 import 'package:calculator/home/widgets/custom_switch.dart';
 import 'package:calculator/model/item_pad_model.dart';
+import 'package:calculator/utils/snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
   // Num pad
   // ['C', '+/-', '%' , '/']
   // ['7',  '8' , '9' , 'x']
@@ -146,6 +148,10 @@ class HomeScreen extends StatelessWidget {
     return CupertinoButton(
       onPressed: () {
         context.read<HomeViewModel>().getInput(item);
+        final msg = context.read<HomeViewModel>().errorMsg;
+        if (msg != null && item.calculations == Calculations.equal) {
+          CustomSnackBar.showError(msg, context);
+        }
       },
       padding: EdgeInsets.zero,
       child: Container(
