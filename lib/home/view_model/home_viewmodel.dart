@@ -9,6 +9,7 @@ class HomeViewModel with ChangeNotifier {
   List<String> _listInput = ['0'];
   double? _output;
   String? errorMsg;
+
   String get inputString => _inputString;
 
   double? get output => _output;
@@ -66,7 +67,6 @@ class HomeViewModel with ChangeNotifier {
     final operator = match.group(1);
     final number = match.group(2);
     if (number == null) return;
-    print('${match.start} : ${match.end}');
     if (_listInput.length == 1 && _listInput.first != '0') {
       if (operator == null || operator == '+') {
         _inputString = '-$_inputString';
@@ -75,14 +75,11 @@ class HomeViewModel with ChangeNotifier {
       }
       return;
     }
-    if (_listInput.length > 1) {
-      if (number.startsWith('-')) {
-        _inputString =
-            _inputString.substring(0, match.start + (operator?.length ?? 0)) + number.substring(1);
-      } else {
-        _inputString =
-            '${_inputString.substring(0, match.start + (operator?.length ?? 0))}-$number';
-      }
+    if (number.startsWith('-')) {
+      _inputString =
+          _inputString.substring(0, match.start + (operator?.length ?? 0)) + number.substring(1);
+    } else {
+      _inputString = '${_inputString.substring(0, match.start + (operator?.length ?? 0))}-$number';
     }
   }
 
@@ -90,13 +87,12 @@ class HomeViewModel with ChangeNotifier {
     String input = _inputString;
     input = input.replaceAll('x', '*').replaceAll('÷', '/');
     if (double.tryParse(_listInput.last) != null) {
-      try{
+      try {
         Parser p = Parser();
         Expression exp = p.parse(input);
         ContextModel ctx = ContextModel();
         _output = exp.evaluate(EvaluationType.REAL, ctx);
-      }
-      catch(e){
+      } catch (e) {
         errorMsg = e.toString();
       }
     }
@@ -111,7 +107,7 @@ class HomeViewModel with ChangeNotifier {
           _hasComma = false;
         } else if (_inputString != '0') {
           _inputString = _inputString.substring(0, inputString.length - 1);
-          if(_listInput.last == '.'){
+          if (_listInput.last == '.') {
             _hasComma = false;
           }
           _listInput.removeLast();

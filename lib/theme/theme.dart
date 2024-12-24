@@ -16,6 +16,11 @@ class AppThemes {
           fontSize: 40,
           fontWeight: FontWeight.w300,
           height: 0),
+      bodySmall: const TextStyle(
+          color: Colors.white,
+          fontSize: 32,
+          fontWeight: FontWeight.w400,
+          height: 0),
     ),
     buttonTheme: const ButtonThemeData(
       buttonColor: Color(0xFF4E505F),
@@ -37,7 +42,13 @@ class AppThemes {
             color: Colors.black.withValues(alpha: 0.4),
             fontSize: 40,
             fontWeight: FontWeight.w300,
-            height: 0)),
+            height: 0),
+      bodySmall: const TextStyle(
+          color: Colors.black,
+          fontSize: 32,
+          fontWeight: FontWeight.w400,
+          height: 0),
+    ),
     buttonTheme: const ButtonThemeData(
       buttonColor: Color(0xFFD2D3DA),
     ),
